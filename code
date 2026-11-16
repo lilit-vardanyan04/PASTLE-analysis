@@ -1,0 +1,102 @@
+def pestle_analysis():
+    # 1. PESTLE վերլուծության հիմնական 6 գործոնները
+    factors = {
+        1: "Քաղաքական (Political)",
+        2: "Տնտեսական (Economic)",
+        3: "Սոցիալական (Social)",
+        4: "Տեխնոլոգիական (Technological)",
+        5: "Իրավական (Legal)",
+        6: "Բնապահպանական (Environmental)"
+    }
+
+    print("=== PESTLE ՎԵՐԼՈՒԾՈՒԹՅԱՆ ՀԱՄԱԿԱՐԳ ===")
+    print("Ընտրեք դիտարկվող գործոնը հետևյալ ցանկից:")
+    for key, value in factors.items():
+        print(f"{key}. {value}")
+
+    # Ներմուծում ենք գործոնի համարը
+    try:
+        choice = int(input("\nՄուտքագրեք գործոնի համարը (1-6): "))
+        if choice not in factors:
+            print("Սխալ ընտրություն: Խնդրում ենք մուտքագրել 1-ից 6 թիվ:")
+            return
+    except ValueError:
+        print("Սխալ մուտքագրում: Խնդրում ենք մուտքագրել միայն ամբողջ թիվ:")
+        return
+
+    selected_factor = factors[choice]
+    print(f"\nԴուք ընտրել եք՝ **{selected_factor}** գործոնը։")
+
+    # 2. Ներմուծում ենք 2 հստակ ենթագործոն (օրինակ՝ F1, F2)
+    print("\nՄուտքագրեք երկու հստակ ենթագործոն (օրինակ՝ F1 և F2):")
+    f1_name = input("Առաջին ենթագործոնի անվանումը (F1): ")
+    f2_name = input("Երկրորդ ենթագործոնի անվանումը (F2): ")
+
+    sub_factors = [f1_name, f2_name]
+    expert_count = 6
+    results = {}
+
+    print(f"\n--- ՓՈՐՁԱԳԻՏԱԿԱՆ ԳՆԱՀԱՏՈՒՄ ({expert_count} փորձագետ) ---")
+
+    # 3. 6 փորձագետները հերթով տալիս են գնահատականները ամեն ենթագործոնի համար
+    for sf in sub_factors:
+        print(f"\nԳնահատում ենთ ենթագործոնը: '{sf}'")
+        scores = []
+        for i in range(1, expert_count + 1):
+            while True:
+                try:
+                    score = float(input(f"  Փորձագետ {i}-ի գնահատականը (0-10): "))
+                    scores.append(score)
+                    break
+                except ValueError:
+                    print("  Սխալ մուտքագրում: Խնդրում ենք մուտքագրել թիվ:")
+        
+        # Գտնում ենք միջին գնահատականը
+        avg_score = sum(scores) / len(scores)
+        results[sf] = {
+            "scores": scores,
+            "avg_score": avg_score
+        }
+
+    # 4. Ներմուծում ենք ազդեցության գնահատականները (a...) յուրաքանչյուր ենթագործոնի համար
+    print("\n--- ԱԶԴԵՑՈՒԹՅԱՆ ԳՆԱՀԱՏԱԿԱՆՆԵՐԻ ՆԵՐՄՈՒԾՈՒՄ (a) ---")
+    a_values = {}
+    for sf in sub_factors:
+        while True:
+            try:
+                a = float(input(f"Մուտքագրեք '{sf}' ենթագործոնի ազդեցության գնահատականը (a): "))
+                a_values[sf] = a
+                break
+            except ValueError:
+                print("Խնդրում ենք մուտքագրել թիվ:")
+
+    # Հաշվում ենք a-ների գումարը (sum(a))
+    sum_a = sum(a_values.values())
+    if sum_a == 0:
+        sum_a = 1  # Զրոյական բաժանումից խուսափելու համար
+
+    # 5. Հաշվում ենք կշիռը բանաձևով՝ (a / sum(a)) * միջին գնահատական
+    final_weights = {}
+    for sf in sub_factors:
+        a = a_values[sf]
+        avg_score = results[sf]["avg_score"]
+        weight = (a / sum_a) * avg_score
+        final_weights[sf] = weight
+
+    # 6. Արդյունքների տպում
+    print("\n" + "="*40)
+    print("       ՎԵՐՋՆԱԿԱՆ ՀԱՇՎԱՐԿԻ ԱՐԴՅՈՒՆՔՆԵՐ       ")
+    print("="*40)
+    print(f"Ընտրված PESTLE գործոնը: {selected_factor}")
+    print(f"Բոլոր a արժեքների գումարը (sum(a)) = {sum_a}\n")
+
+    for sf in sub_factors:
+        print(f"• Ենթագործոն: {sf}")
+        print(f"  - Փորձագետների գնահատականներ: {results[sf]['scores']}")
+        print(f"  - Միջին գնահատական: {results[sf]['avg_score']:.2f}")
+        print(f"  - Ազդեցության գնահատական (a): {a_values[sf]}")
+        print(f"  - Հաշվարկված կշիռ: {final_weights[sf]:.4f}")
+        print("-" * 40)
+
+if __name__ == "__main__":
+    pestle_analysis()
